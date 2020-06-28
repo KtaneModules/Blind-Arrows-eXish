@@ -13,13 +13,13 @@
         .tableSetup 
         {
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             width: 100%;
         }
         .tableSetup2
         {
             text-align: center;
-            font-size: 16px;
+            font-size: 0.999999em;
             width: 100%;
         }
     </style>
@@ -39,14 +39,14 @@
                     <p class="flavour-text">Coffee!</p>
                     
                     <ul>
-                        <li>The module will consist of a 5 by 5 grid of buttons. All but one of them will have a arrow pointing in a specific direction.</li>
+                        <li>The module will consist of a 5 by 5 grid of buttons. One button will have a arrow pointed in a specific direction.</li>
                         <li>Using the position and the rotation of the arrow in the tables below, will give you a number to follow a certain rule to find a button to press</li>
                         <li>After pressing a correct button the arrow will move to that position and generate another set of LEDs and a new arrow direction.</li>
                         <li>In order to solve the module, do the following below 5 times.</li>
                     </ul>
                     <h3>Step 1: Finding the initial button</h3>
                     <p>The module will have a top and right side LED that will have 2 colors in the table below. Take the top LED as the column and right LED as the row. This will apply to the number on the next table.</p>
-                    <p style="font-style: italic; font-size: 12px">* DONT -> Down On the Next Table from the number, UONT -> Up On the Next Table from the number</p> 
+                    <p style="font-style: italic; font-size: 12px">* DONT -&gt; Down On the Next Table from the number, UONT -&gt; Up On the Next Table from the number</p> 
                     <table class="tableSetup">
                         <tr>
                             <th>Colors</th>
@@ -160,7 +160,7 @@
                 <div class="page-content">
                     <table class="tableSetup2">
                         <tr>
-                            <td>Direction ➞<br>Position</td>
+                            <td>Direction &#10142;<br>Position</td>
                             <th>N</th>
                             <th>NW</th>
                             <th>W</th>
@@ -447,7 +447,7 @@
                         </tr>
                     </table>
                     <br>
-                    <p>After doing the modification to the number in the table and the number ends up being greater than 99, modulo by 100. If the number ends up being 0 after this module, add up the serial number digits for the number instead.</p>
+                    <p>After doing the modification to the number in the table and the number ends up being greater than 99, modulo by 100. If the number ends up being 0 after this modulo, add up the serial number digits for the number instead.</p>
                 </div>
                 <div class="page-footer relative-footer">Page 2 of 3</div>
             </div>

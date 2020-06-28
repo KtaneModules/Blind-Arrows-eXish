@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KModkit;
+using System.Text.RegularExpressions;
 
 public class blindArrowsScript : MonoBehaviour 
 {
@@ -19,20 +20,31 @@ public class blindArrowsScript : MonoBehaviour
 	public TextMesh[] Arrows;
 	public Renderer LEDTop;
 	public Renderer LEDRight;
+    public Light[] lights;
 	private int ButtonSolution = 0;
 	private int LEDIndex1 = 0;
 	private int LEDIndex2 = 0;
     private int ButtonIndex = 0;
 	private int RotationStore = 0;
 	private int Stage = 0;
+    private bool lightsOn = false;
 
 	void Awake()
 	{
 		moduleId = moduleIdCounter++;
-		foreach (KMSelectable Arrow in matrix)
+        LEDTop.material = LEDOptions[0];
+        LEDRight.material = LEDOptions[0];
+        float scalar = transform.lossyScale.x;
+        foreach (Light l in lights)
+        {
+            l.enabled = false;
+            l.range *= scalar;
+        }
+        foreach (KMSelectable Arrow in matrix)
 		{
 			Arrow.OnInteract += delegate () { PressedArrow(Arrow); return false; };
 		}
+        GetComponent<KMBombModule>().OnActivate += OnActivate;
 	}
 
 	// Use this for initialization
@@ -42,33 +54,48 @@ public class blindArrowsScript : MonoBehaviour
 		RemoveArrows();
 		PickLEDColor();	
 		solving();
-		Debug.LogFormat("[Blind Arrows #{0}] The correct button to press is {1}", moduleId, ButtonSolution);
+		Debug.LogFormat("[Blind Arrows #{0}] The correct button to press is {1}", moduleId, ButtonSolution + 1);
 	}
+
+    void OnActivate()
+    {
+        LEDTop.material = LEDOptions[LEDIndex1];
+        LEDRight.material = LEDOptions[LEDIndex2];
+        foreach (Light l in lights)
+        {
+            l.enabled = true;
+        }
+        lightsOn = true;
+    }
 
 	void PickLEDColor()
 	{
 		LEDIndex1 = UnityEngine.Random.Range(0,8);
-		LEDTop.material = LEDOptions[LEDIndex1];
-		LEDIndex2 = UnityEngine.Random.Range(0,8);
-		LEDRight.material = LEDOptions[LEDIndex2];
-		Debug.LogFormat("[Blind Arrows #{0}] The top LED is {1}, The Right LED is {2}. ", moduleId, LEDOptions[LEDIndex1].name, LEDOptions[LEDIndex2].name);
+        LEDIndex2 = UnityEngine.Random.Range(0,8);
+        if (lightsOn)
+        {
+            LEDTop.material = LEDOptions[LEDIndex1];
+            LEDRight.material = LEDOptions[LEDIndex2];
+        }
+        Debug.LogFormat("[Blind Arrows #{0}] The top LED is {1}, The right LED is {2}. ", moduleId, LEDOptions[LEDIndex1].name, LEDOptions[LEDIndex2].name);
 	}
 
 	void PickButtonCoordinate()
 	{
-		ButtonIndex = UnityEngine.Random.Range(0,25);
-		Debug.LogFormat("[Blind Arrows #{0}] Initial button coordinates were {1}{2}.", moduleId, "ABCDE"[ButtonIndex % 5],"12345"[ButtonIndex / 5]);
+        ButtonIndex = UnityEngine.Random.Range(0,25);
+        Debug.LogFormat("[Blind Arrows #{0}] Initial button coordinates were {1}{2}.", moduleId, "ABCDE"[ButtonIndex % 5],"12345"[ButtonIndex / 5]);
 	}
 
 	void RemoveArrows()
 	{
 		for (int i = 0; i < Arrows.Length; i++)
 		{
-			Arrows[i].transform.localRotation = Quaternion.Euler(90f,0f,0f);
-			if (i == ButtonIndex)
+            Arrows[i].transform.localPosition = new Vector3(0f, 0.0123f, 0.0045f);
+            Arrows[i].transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            if (i == ButtonIndex)
 			{
 				RotationStore = UnityEngine.Random.Range(0, 8);
-				Arrows[i].transform.Rotate(Vector3.forward, 45f * RotationStore);
+                Arrows[i].transform.RotateAround(Arrows[i].transform.parent.position, new Vector3(0, -1, 0), 45f * RotationStore);
 				continue;
 			}
 			Arrows[i].text = "";
@@ -638,7 +665,7 @@ public class blindArrowsScript : MonoBehaviour
 		if(Index != ButtonSolution)
 		{
 			GetComponent <KMBombModule>().HandleStrike();
-			Debug.LogFormat("[Blind Arrows #{0}] Strike! Incorrect button press. Expected {1}. Got {2}.", moduleId, ButtonSolution, Index);
+			Debug.LogFormat("[Blind Arrows #{0}] Strike! Incorrect button press. Expected {1}. Got {2}.", moduleId, ButtonSolution + 1, Index + 1);
 			return;
 		}
 		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
@@ -659,10 +686,51 @@ public class blindArrowsScript : MonoBehaviour
 		PickLEDColor();
 		RemoveArrows();
 		solving();
-		Debug.LogFormat("[Blind Arrows #{0}] The correct button to press is {1}", moduleId, ButtonSolution);
+		Debug.LogFormat("[Blind Arrows #{0}] The correct button to press is {1}", moduleId, ButtonSolution + 1);
 		++Stage;
-
 	}
 
-	
+    //twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} press <coord> [Presses the button at the specified coordinate] | Valid coordinates are A1-E5";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        string[] parameters = command.Split(' ');
+        if (Regex.IsMatch(parameters[0], @"^\s*press\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            if (parameters.Length > 2)
+            {
+                yield return "sendtochaterror Too many parameters!";
+            }
+            else if (parameters.Length == 2)
+            {
+                string[] valids = new string[] { "A1", "B1", "C1", "D1", "E1", "A2", "B2", "C2", "D2", "E2", "A3", "B3", "C3", "D3", "E3", "A4", "B4", "C4", "D4", "E4", "A5", "B5", "C5", "D5", "E5" };
+                if (valids.Contains(parameters[1].ToUpper()))
+                {
+                    matrix[Array.IndexOf(valids, parameters[1].ToUpper())].OnInteract();
+                }
+                else
+                {
+                    yield return "sendtochaterror The specified coordinate '" + parameters[1] + "' is invalid!";
+                }
+            }
+            else if (parameters.Length == 1)
+            {
+                yield return "sendtochaterror Please specify a coordinate of a button to press!";
+            }
+            yield break;
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        int start = Stage;
+        for (int i = start; i < 5; i++)
+        {
+            matrix[ButtonSolution].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
 }
