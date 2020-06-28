@@ -14,7 +14,7 @@ MonoBehaviour:
   id: blindArrows
   title: Blind Arrows
   author: Aero, Katarina, Sean Obach
-  description: 'Blind Arrows v1.0.0
+  description: 'Blind Arrows v1.0.1
 
 
     Idea and implementation by Aero
@@ -30,6 +30,6 @@ MonoBehaviour:
 
 
     If any bugs are found, contact me on discord at Aero#2099'
-  version: 1.0.0
+  version: 1.0.1
   outputFolder: build
-  previewImage: {fileID: 2800000, guid: 81638321ba78d214298051d74c7ae149, type: 3}
+  previewImage: {fileID: 2800000, guid: 22447db075830d348a0780a0295dba30, type: 3}
