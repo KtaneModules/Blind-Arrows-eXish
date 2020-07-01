@@ -88,20 +88,19 @@ public class blindArrowsScript : MonoBehaviour
 
 	void RemoveArrows()
 	{
-		for (int i = 0; i < Arrows.Length; i++)
-		{
-            Arrows[i].transform.localPosition = new Vector3(0f, 0.0123f, 0.0045f);
+        for (int i = 0; i < Arrows.Length; i++)
+        {
             Arrows[i].transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             if (i == ButtonIndex)
-			{
-				RotationStore = UnityEngine.Random.Range(0, 8);
-                Arrows[i].transform.RotateAround(Arrows[i].transform.parent.position, new Vector3(0, -1, 0), 45f * RotationStore);
-				continue;
-			}
-			Arrows[i].text = "";
-		}
-		Debug.LogFormat("[Blind Arrows #{0}] Initial rotation is {1}.", moduleId, "N NW W SW S SE E NE".Split(' ')[RotationStore]);
-	}
+            {
+                RotationStore = UnityEngine.Random.Range(0, 8);
+                Arrows[i].transform.Rotate(Vector3.forward, 45f * RotationStore);
+                continue;
+            }
+            Arrows[i].text = "";
+        }
+        Debug.LogFormat("[Blind Arrows #{0}] Initial rotation is {1}.", moduleId, "N NW W SW S SE E NE".Split(' ')[RotationStore]);
+    }
 
 	private int [][] NumTable =
 	{
