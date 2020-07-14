@@ -34,11 +34,9 @@ public class blindArrowsScript : MonoBehaviour
 		moduleId = moduleIdCounter++;
         LEDTop.material = LEDOptions[0];
         LEDRight.material = LEDOptions[0];
-        float scalar = transform.lossyScale.x;
         foreach (Light l in lights)
         {
             l.enabled = false;
-            l.range *= scalar;
         }
         foreach (KMSelectable Arrow in matrix)
 		{
@@ -50,7 +48,12 @@ public class blindArrowsScript : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		PickButtonCoordinate();
+        float scalar = transform.lossyScale.x;
+        foreach (Light l in lights)
+        {
+            l.range *= scalar;
+        }
+        PickButtonCoordinate();
 		RemoveArrows();
 		PickLEDColor();	
 		solving();
