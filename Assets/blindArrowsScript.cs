@@ -583,7 +583,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n1 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n1 % 5 == 0)
+					if (mod(n1, 5) == 0)
 					{
 						n1--;
 					}
@@ -604,7 +604,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n2 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n2 % 5 == 0)
+					if (mod(n2, 5) == 0)
 					{
 						n2 += 9;
 					}
@@ -625,7 +625,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n3 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n3 % 5 == 4)
+					if (mod(n3, 5) == 4)
 					{
 						n3++;
 					}
@@ -646,7 +646,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n4 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n4 % 5 == 4)
+					if (mod(n4, 5) == 4)
 					{
 						n4 -= 9;
 					}
