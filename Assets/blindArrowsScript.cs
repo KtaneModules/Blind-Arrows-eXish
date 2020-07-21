@@ -34,11 +34,9 @@ public class blindArrowsScript : MonoBehaviour
 		moduleId = moduleIdCounter++;
         LEDTop.material = LEDOptions[0];
         LEDRight.material = LEDOptions[0];
-        float scalar = transform.lossyScale.x;
         foreach (Light l in lights)
         {
             l.enabled = false;
-            l.range *= scalar;
         }
         foreach (KMSelectable Arrow in matrix)
 		{
@@ -50,7 +48,12 @@ public class blindArrowsScript : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		PickButtonCoordinate();
+        float scalar = transform.lossyScale.x;
+        foreach (Light l in lights)
+        {
+            l.range *= scalar;
+        }
+        PickButtonCoordinate();
 		RemoveArrows();
 		PickLEDColor();	
 		solving();
@@ -580,7 +583,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n1 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n1 % 5 == 0)
+					if (mod(n1, 5) == 0)
 					{
 						n1--;
 					}
@@ -601,7 +604,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n2 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n2 % 5 == 0)
+					if (mod(n2, 5) == 0)
 					{
 						n2 += 9;
 					}
@@ -622,7 +625,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n3 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n3 % 5 == 4)
+					if (mod(n3, 5) == 4)
 					{
 						n3++;
 					}
@@ -643,7 +646,7 @@ public class blindArrowsScript : MonoBehaviour
 				int n4 = ButtonIndex;
 				for (int i = 0; i < Amount; i++)
 				{
-					if (n4 % 5 == 4)
+					if (mod(n4, 5) == 4)
 					{
 						n4 -= 9;
 					}
