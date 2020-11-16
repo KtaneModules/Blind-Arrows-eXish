@@ -194,6 +194,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114204368815145092, guid: 09063d5534985f74fbe19c69bb516c05,
+        type: 2}
+      propertyPath: LEDOptions.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 66be748e50333495fa358705c328bcd6, type: 2}
+    - target: {fileID: 114204368815145092, guid: 09063d5534985f74fbe19c69bb516c05,
+        type: 2}
+      propertyPath: LEDOptions.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a8753914a3528438f952b89edeecf7cb, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 09063d5534985f74fbe19c69bb516c05, type: 2}
   m_IsPrefabParent: 0
