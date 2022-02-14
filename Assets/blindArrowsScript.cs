@@ -10,6 +10,7 @@ public class blindArrowsScript : MonoBehaviour
 {
 	public KMAudio Audio;
 	public KMBombInfo bomb;
+	public KMColorblindMode colorblind;
 
 	static int moduleIdCounter = 1;
 	int moduleId;
@@ -18,6 +19,7 @@ public class blindArrowsScript : MonoBehaviour
 
 	public Material[] LEDOptions;
 	public TextMesh[] Arrows;
+	public TextMesh[] LEDCBTexts;
 	public Renderer LEDTop;
 	public Renderer LEDRight;
     public Light[] lights;
@@ -28,12 +30,14 @@ public class blindArrowsScript : MonoBehaviour
 	private int RotationStore = 0;
 	private int Stage = 0;
     private bool lightsOn = false;
+	private bool colorblindActive = false;
 
 	void Awake()
 	{
 		moduleId = moduleIdCounter++;
-        LEDTop.material = LEDOptions[0];
-        LEDRight.material = LEDOptions[0];
+        LEDTop.material = LEDOptions[1];
+        LEDRight.material = LEDOptions[1];
+		colorblindActive = colorblind.ColorblindModeActive;
         foreach (Light l in lights)
         {
             l.enabled = false;
@@ -68,7 +72,20 @@ public class blindArrowsScript : MonoBehaviour
         {
             l.enabled = true;
         }
-        lightsOn = true;
+		if (colorblindActive)
+		{
+			LEDCBTexts[0].text = LEDOptions[LEDIndex1].name;
+			LEDCBTexts[1].text = LEDOptions[LEDIndex2].name;
+			if (LEDCBTexts[0].text == "Black")
+				LEDCBTexts[0].color = Color.white;
+			else
+				LEDCBTexts[0].color = Color.black;
+			if (LEDCBTexts[1].text == "Black")
+				LEDCBTexts[1].color = Color.white;
+			else
+				LEDCBTexts[1].color = Color.black;
+		}
+		lightsOn = true;
     }
 
 	void PickLEDColor()
@@ -79,7 +96,20 @@ public class blindArrowsScript : MonoBehaviour
         {
             LEDTop.material = LEDOptions[LEDIndex1];
             LEDRight.material = LEDOptions[LEDIndex2];
-        }
+			if (colorblindActive)
+			{
+				LEDCBTexts[0].text = LEDOptions[LEDIndex1].name;
+				LEDCBTexts[1].text = LEDOptions[LEDIndex2].name;
+				if (LEDCBTexts[0].text == "Black")
+					LEDCBTexts[0].color = Color.white;
+				else
+					LEDCBTexts[0].color = Color.black;
+				if (LEDCBTexts[1].text == "Black")
+					LEDCBTexts[1].color = Color.white;
+				else
+					LEDCBTexts[1].color = Color.black;
+			}
+		}
         Debug.LogFormat("[Blind Arrows #{0}] The top LED is {1}, The right LED is {2}. ", moduleId, LEDOptions[LEDIndex1].name, LEDOptions[LEDIndex2].name);
 	}
 
@@ -671,7 +701,7 @@ public class blindArrowsScript : MonoBehaviour
 			return;
 		}
 		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
-		if(Stage == 4)
+		if(Stage == 2)
 		{
 			GetComponent <KMBombModule>().HandlePass();
 			moduleSolved = true;
@@ -694,11 +724,38 @@ public class blindArrowsScript : MonoBehaviour
 
     //twitch plays
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"!{0} press <coord> [Presses the button at the specified coordinate] | Valid coordinates are A1-E5";
+    private readonly string TwitchHelpMessage = @"!{0} press <coord> [Presses the button at the specified coordinate] | !{0} colorblind [Toggles colorblind mode] | Valid coordinates are A1-E5";
     #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string command)
     {
-        string[] parameters = command.Split(' ');
+		if (Regex.IsMatch(command, @"^\s*colorblind\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+			yield return null;
+			colorblindActive = !colorblindActive;
+			if (lightsOn)
+            {
+				if (colorblindActive)
+                {
+					LEDCBTexts[0].text = LEDOptions[LEDIndex1].name;
+					LEDCBTexts[1].text = LEDOptions[LEDIndex2].name;
+					if (LEDCBTexts[0].text == "Black")
+						LEDCBTexts[0].color = Color.white;
+					else
+						LEDCBTexts[0].color = Color.black;
+					if (LEDCBTexts[1].text == "Black")
+						LEDCBTexts[1].color = Color.white;
+					else
+						LEDCBTexts[1].color = Color.black;
+				}
+                else
+                {
+					LEDCBTexts[0].text = "";
+					LEDCBTexts[1].text = "";
+				}
+			}
+			yield break;
+        }
+	    string[] parameters = command.Split(' ');
         if (Regex.IsMatch(parameters[0], @"^\s*press\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
@@ -722,14 +779,13 @@ public class blindArrowsScript : MonoBehaviour
             {
                 yield return "sendtochaterror Please specify a coordinate of a button to press!";
             }
-            yield break;
         }
     }
 
     IEnumerator TwitchHandleForcedSolve()
     {
         int start = Stage;
-        for (int i = start; i < 5; i++)
+        for (int i = start; i < 3; i++)
         {
             matrix[ButtonSolution].OnInteract();
             yield return new WaitForSeconds(0.1f);
