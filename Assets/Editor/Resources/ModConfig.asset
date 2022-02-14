@@ -14,22 +14,11 @@ MonoBehaviour:
   id: blindArrows
   title: Blind Arrows
   author: Aero, Katarina, Sean Obach
-  description: 'Blind Arrows v1.0.4
-
-
-    Idea and implementation by Aero
-
-    Coding and beta testing by Katarina and Sean Obach
-
-
-    Module ID: blindArrows
-
-    PDF: https://ktane.timwi.de/PDF/Blind%20Arrows.pdf
-
-    HTML: https://ktane.timwi.de/HTML/Blind%20Arrows.html
-
-
-    If any bugs are found, contact me on discord at Aero#2099'
-  version: 1.0.1
+  description: "This is a reupload of a module, unsubscribe from the old version here:
+    https://steamcommunity.com/sharedfiles/filedetails/?id=2139116869\r\n\r\nHTML:
+    https://ktane.timwi.de/HTML/Blind%20Arrows.html\r\nPDF: https://ktane.timwi.de/PDF/Blind%20Arrows.pdf\r\n\r\nBlind
+    Arrows (blindArrows) v1.0.6\nIdea and Implementation by Aero\r\nCoding and Beta
+    Testing by Katarina\r & Sean Obach\nMaintained by eXish\r\nTwitch Plays supported"
+  version: 1.0.6
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 22447db075830d348a0780a0295dba30, type: 3}
